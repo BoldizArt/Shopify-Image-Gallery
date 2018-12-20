@@ -1,0 +1,245 @@
+{% comment %} Include jQuery and bootstrap files. {% endcomment %}
+{{ 'jquery-3.3.1.min.js' | asset_url | script_tag }}
+{{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+
+{% comment %} Include stylesheets and scripts. {% endcomment %}
+{{ 'rebox.js' | asset_url | script_tag }}
+{{ 'rebox.css' | asset_url | stylesheet_tag }}
+{{ 'custom.scss.css' | asset_url | stylesheet_tag }}
+
+{% comment %} Image gallery {% endcomment %}
+<div class="fluid-container gallery-section row" style="
+	{% if section.settings.background_color != blank %}background-color: {{ section.settings.background_color }}; {% endif %} 
+	{% if section.settings.text_color != blank %}color: {{ section.settings.text_color }}; {% endif %} 
+">
+	<div class="{% if section.settings.container != blank %}{{ section.settings.container }}{% endif %}">
+        <div class="content">
+            <div class="rows">
+                <div class="header text-center">
+                    {% if section.settings.title != blank %}
+                        <h2 class="title">{{ section.settings.title | escape }}</h2>          
+                    {% endif %}
+                    {% if section.settings.description != blank %}
+                        <div class="col-xs-12 description">{{section.settings.description }}</div>          
+                    {% endif %}
+                </div>
+            
+                {% case section.settings.xs %}
+                    {%- when '12' -%}
+                        {%- assign xs = 'col-xs-12 ' -%}
+                    {%- when '6' -%}
+                        {%- assign xs = 'col-xs-6 ' -%}
+                    {%- when '4' -%}
+                        {%- assign xs = 'col-xs-4 ' -%}
+                {% endcase %}
+
+                {% case section.settings.sm %}
+                    {%- when '6' -%}
+                        {%- assign sm = 'col-sm-6 ' -%}
+                    {%- when '4' -%}
+                        {%- assign sm = 'col-sm-4 ' -%}
+                    {%- when '3' -%}
+                        {%- assign sm = 'col-sm-3 ' -%}
+                {% endcase %}
+
+                {% case section.settings.md %}
+                    {%- when '4' -%}
+                        {%- assign md = 'col-md-4 ' -%}
+                    {%- when '3' -%}
+                        {%- assign md = 'col-md-3 ' -%}
+                    {%- when '2' -%}
+                        {%- assign md = 'col-md-2 ' -%}
+                {% endcase %}
+
+                {% case section.settings.lg %}
+                    {%- when '4' -%}
+                        {%- assign dimensions = '400x400' -%}
+                        {%- assign lg = 'col-lg-4 ' -%}
+                    {%- when '3' -%}
+                        {%- assign dimensions = '300x300' -%}
+                        {%- assign lg = 'col-lg-3 ' -%}
+                    {%- when '2' -%}
+                        {%- assign dimensions = '200x200' -%}
+                        {%- assign lg = 'col-lg-2 ' -%}
+                {% endcase %}
+
+                <div id="gallery" class="album">
+                    {% for block in section.blocks %}
+                        <div class="{{ lg }}{{ md }}{{ sm }}{{ xs }}">
+                            <a href="{{ block.settings.image | img_url: 'master' }}" title="{{ block.settings.image.alt }}">
+                                <img 
+                                    class="thumb img-responsive show-it image-{% increment count %}"
+                                    src="{{ block.settings.image | img_url: dimensions, crop: 'center' }}"
+                                    alt="{{ block.settings.image.alt }}" />
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(document).find('#gallery').rebox({ selector: 'a' });
+</script>
+
+<style type="text/css">
+    .gallery-section .header .title, 
+    .gallery-section .header p { {% if section.settings.text_color != blank %}color: {{ section.settings.text_color }};{% endif %} }
+</style>
+
+{% schema %}
+
+    {
+        "name": "Image gallery",
+        "class": "image-gallery",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Gallery title",
+                "default": "Gallery title"
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Gallery description",
+                "default": "<p>Gallery description...</p>"
+            },
+            {
+                "type": "select",
+                "id": "container",
+                "label": "Container width",
+                "default": "container",
+                "options": [
+                    {
+                        "value": "fluid-container",
+                        "label": "Fluid container"
+                    }, 
+                    {
+                        "value": "container",
+                        "label": "Container"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "xs",
+                "label": "Count of images per row on mobile phone.",
+                "default": "6",
+                "options": [
+                    {
+                        "value": "12",
+                        "label": "One image"
+                    }, 
+                    {
+                        "value": "6",
+                        "label": "Two images"
+                    }, 
+                    {
+                        "value": "4",
+                        "label": "Three images"
+                    } 
+                ]
+            },
+            {
+                "type": "select",
+                "id": "sm",
+                "label": "Count of images per row on tablet.",
+                "default": "4",
+                "options": [
+                    {
+                        "value": "6",
+                        "label": "Two images"
+                    }, 
+                    {
+                        "value": "4",
+                        "label": "Three images"
+                    }, 
+                    {
+                        "value": "3",
+                        "label": "Four images"
+                    } 
+                ]
+            },
+            {
+                "type": "select",
+                "id": "md",
+                "label": "Count of images per row on laptop.",
+                "default": "4",
+                "options": [
+                    {
+                        "value": "4",
+                        "label": "Three images"
+                    }, 
+                    {
+                        "value": "3",
+                        "label": "Four images"
+                    }, 
+                    {
+                        "value": "2",
+                        "label": "Six images"
+                    } 
+                ]
+            },
+            {
+                "type": "select",
+                "id": "lg",
+                "label": "Count of images per row on desktop",
+                "default": "3",
+                "options": [
+                    {
+                        "value": "4",
+                        "label": "Three images"
+                    }, 
+                    {
+                        "value": "3",
+                        "label": "Four images"
+                    }, 
+                    {
+                        "value": "2",
+                        "label": "Six images"
+                    } 
+                ]
+            },
+            {
+                "type": "color",
+                "id": "background_color",
+                "label": "Background color",
+                "default": "#fefefe"
+            },
+            {
+                "type": "color",
+                "id": "text_color",
+                "label": "Text color",
+                "default": "#4d4d4d"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "image",
+                "name": "Image",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "Image gallery",
+                "category": "BoldizArt",
+                "blocks": [
+                    {
+                        "type": "image"
+                    }
+                ]
+            }
+        ]
+    }
+
+{% endschema %}

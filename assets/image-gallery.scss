@@ -1,0 +1,51 @@
+// Image gallery
+@mixin scale($value) {
+  -webkit-transform: scale($value);
+  -moz-transform:    scale($value);
+  -ms-transform:     scale($value);
+  -o-transform:      scale($value);
+  transform:         scale($value);
+}
+
+@mixin transition($name, $value: 480ms) {
+  -webkit-transition: $name $value ease-out;
+  -moz-transition:    $name $value ease-out;
+  -ms-transform:      $name $value ease-out;
+  -o-transition:      $name $value ease-out;
+  transition:         $name $value ease-out;
+}
+
+.gallery-section {
+  position: relative;
+	padding: 75px 0;
+  &.fluid-container {
+  	padding-left: 15px;
+    padding-right: 15px;
+  }
+	.header {
+		.description { margin-bottom: 25px; }
+	}
+  .content {
+    [class*=col-sm] {
+      margin: 15px auto;
+      .img-responsive { 
+        width: 100%;
+        height: auto;
+        @include transition(transform, 640ms);
+        &:hover {
+          @include scale(1.05);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+// Rebox style debug
+.rebox-button {
+  font-family: arial;
+  line-height: 44px;
+  &.rebox-prev { line-height: inherit; }
+  &.rebox-next { line-height: inherit; }
+  &:hover { text-decoration: none; }
+}
